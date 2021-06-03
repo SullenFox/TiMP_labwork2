@@ -1,16 +1,21 @@
-#include "modAlphaCipher.h"
+#include "modMarshCipher.h"
 
 void check(const string& Text, const string& key)
 {
     try {
         string cipherText;
         string decryptedText;
-        modAlphaCipher cipher(key);
-        cipherText = cipher.encrypt(Text);
-        decryptedText = cipher.decrypt(cipherText);
-        cout<<"key="<<key<<endl;
-        cout<<"Encrypted text: "<<cipherText<<endl;
-        cout<<"Decrypted text: "<<decryptedText<<endl;
+        if (key.empty())
+            throw cipher_error("Empty key");
+        if (stoi(key) > 0) {
+            modMarshCipher cipher(stoi(key));
+            cipherText = cipher.encrypt(Text);
+            decryptedText = cipher.decrypt(cipherText);
+            cout<<"key="<<key<<endl;
+            cout<<"Encrypted text: "<<cipherText<<endl;
+            cout<<"Decrypted text: "<<decryptedText<<endl;
+        } else
+            throw cipher_error(std::string("Invalid key ")+key);
     } catch (const cipher_error & e) {
         cerr<<"Error: "<<e.what()<<endl;
     }
@@ -19,9 +24,9 @@ void check(const string& Text, const string& key)
 
 int main(int argc, char **argv)
 {
-    check("Лиса","лол");
-    check("ПОКА","");
-    check("ЛИСА","АГАГАГ1337");
-    check("Ли са","оооо");
-    check("123","ПРИВЕТ");
+    check("FOX","0");
+    check("FOX","");
+    check("lisa","4");
+    check("Li    s a","4");
+    check("123","4");
 }
